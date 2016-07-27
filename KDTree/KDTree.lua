@@ -18,7 +18,7 @@ local O_I = {}
 	O_I.insert = function(self, point, item)
 		local i = (depth % #self.point) + 1
 
-		if self.point[i] > point[i] then
+		if self.point[i] >= point[i] then
 			if self.left then
 				self.left:insert(point, item)
 			else
