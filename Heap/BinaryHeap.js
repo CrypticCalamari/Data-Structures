@@ -1,5 +1,8 @@
 #!/usr/bin/node
 
+// TODO: Make merge() more efficient and implement the HeapSort algorithm
+// TODO: Test BinaryHeap.merge()
+
 class BinaryHeap {
 	constructor (max = true) {
 		this.heap = [];
@@ -7,6 +10,16 @@ class BinaryHeap {
 	}
 	get size () {return this.heap.length;}
 	get isEmpty () {return this.heap.length === 0;}
+	static merge (h1, h2) {
+		let H = new BinaryHeap();
+
+		for (let i = 0; i < h1.size; i++)
+			H.push(h1.heap[i]);
+		for (let i = 0; i < h2.size; i++)
+			H.push(h2.heap[i]);
+		
+		return H;
+	}
 	peak () {
 		if (this.heap.length > 0)
 			return this.heap[0];
@@ -76,15 +89,12 @@ class BinaryHeap {
 	}
 	delete (key) {
 		if (key == this.heap.length - 1) {
-//console.log("What the fuck ...");
 			this.heap.pop();
 			return;
 		}
 		if (key < this.heap.length - 1) {
-console.log("What the fuck ...");
-
-			heap[key] = heap[heap.length-1];
-			console.log(this.heap.pop());
+			this.heap[key] = this.heap[heap.length-1];
+			this.heap.pop()
 			this.bubble_down(key);
 		}
 	}
