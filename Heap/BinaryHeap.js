@@ -25,7 +25,7 @@ class BinaryHeap {
 
 			if (this.heap.length > 1) {
 				this.heap[0] = this.heap.pop();
-				this.bubble_down();
+				this.bubble_down(0);
 			}
 			else
 				this.heap.pop();
@@ -51,9 +51,9 @@ class BinaryHeap {
 			}
 		}
 	}
-	bubble_down () {
+	bubble_down (key) {
 		let heap = this.heap;
-		let [parent, left, right] = [0, 1, 2];
+		let [parent, left, right] = [key, 2*key+1, 2*key+2];
 		let compare = (this.max) ? ((x,y) => x > y) : ((x,y) => x < y);
 
 		while ((2*parent + 1) < heap.length) {
@@ -66,11 +66,26 @@ class BinaryHeap {
 					parent = right;
 				}
 			} else {
-				[heap[parent], heap[left]] = [heap[left], heap[parent]];
+				if (compare(heap[left], heap[parent]))
+					[heap[parent], heap[left]] = [heap[left], heap[parent]];
 				break;
 			}
 			left = 2*parent + 1;
 			right = 2*parent + 2;
+		}
+	}
+	delete (key) {
+		if (key == this.heap.length - 1) {
+//console.log("What the fuck ...");
+			this.heap.pop();
+			return;
+		}
+		if (key < this.heap.length - 1) {
+console.log("What the fuck ...");
+
+			heap[key] = heap[heap.length-1];
+			console.log(this.heap.pop());
+			this.bubble_down(key);
 		}
 	}
 }
@@ -84,7 +99,7 @@ class BinaryHeap {
 \*|=====================|*/
 
 
-heap = new BinaryHeap(false);
+let heap = new BinaryHeap();
 console.log(heap.size);
 console.log(heap.isEmpty);
 console.log(heap.peak());
@@ -93,7 +108,10 @@ for (let i = 0; i < 15; i++) {
 	heap.push(i);
 }
 console.log(...heap.heap);
-
+/*
+heap.delete(5);
+console.log(...heap.heap);
+*/
 while (!heap.isEmpty) {
 	console.log(heap.heap);
 	console.log(heap.pop());
@@ -108,7 +126,22 @@ let ordered = [];
 while (!heap.isEmpty) {
 	ordered.push(heap.pop());
 }
-console.log(...ordered);
+console.log("Ordered:", ...ordered);
+for (let i = 0; i < 10; i++) {
+	heap.push(Math.floor(Math.random() * 250) + 500);
+}
+
+console.log(heap.heap);
+heap.delete(5);
+heap.delete(5);
+heap.delete(5);
+heap.delete(5);
+heap.heap.pop();
+console.log("Heap After: ", ...heap.heap);
+heap.heap.pop();
+console.log("Heap After: ", ...heap.heap);
+heap.heap.pop();
+console.log("Heap After: ", ...heap.heap);
 
 
 
