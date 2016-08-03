@@ -6,10 +6,8 @@ class Heap:
 	def __init__(self):
 		self.heap = []
 	
-	def size(self):
-		return len(self.heap)
-	def isEmpty(self):
-		return not len(self.heap)
+	def size(self):			return len(self.heap)
+	def isEmpty(self):	return not len(self.heap)
 	def peak(self):
 		if len(self.heap) != 0:
 			return self.heap[0]
