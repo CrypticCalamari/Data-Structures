@@ -1,9 +1,15 @@
 #!/usr/bin/python3
 
+import random
+
 class Point:
 	def __init__(self, x, y):
 		self.x = x
 		self.y = y
+	def __str__(self):
+		return "(" + str(self.x) + "," + str(self.y) + ")"
+	def __repr__(self):
+		return "(" + str(self.x) + ", " + str(self.y) + ")"
 
 class Bound:
 	def __init__(self, x, y, w, h):
@@ -29,7 +35,7 @@ class Quadtree:
 	NW = 1
 	SW = 2
 	SE = 3
-	def __init__(self, bound, depth):
+	def __init__(self, bound, depth=0):
 		self.bound		= bound
 		self.depth		= depth
 		self.items		= []
@@ -48,6 +54,21 @@ class Quadtree:
 			if c.insert(point, value):
 				return True
 		return False
+	def rangequery(self, bound):
+		cursor = self
+		stack = []
+		found = []
+		stack.append(self)
+		
+		while len(stack):
+			cursor = stack.pop()
+			for i in cursor.items:
+				if bound.contains(i['point']):
+					found.append(i['point'])
+				if cursor.children:
+					for c in cursor.children:
+						stack.append(c)
+		return found
 	def split(self):
 		if self.depth == Quadtree.MAXDEPTH: return False
 
@@ -55,13 +76,32 @@ class Quadtree:
 		b = self.bound
 		hw, hh = b.w/2,  b.h/2
 
-		c[0] = Quadtree(Bound(b.x + hw, b.y,			hw, hh), depth + 1)
-		c[1] = Quadtree(Bound(b.x,			b.y,			hw, hh), depth + 1)
-		c[2] = Quadtree(Bound(b.x, 			b.y + hh, hw, hh), depth + 1)
-		c[3] = Quadtree(Bound(b.x + hw, b.y + hh,	hw, hh), depth + 1)
+		c[0] = Quadtree(Bound(b.x + hw, b.y,			hw, hh), self.depth + 1)
+		c[1] = Quadtree(Bound(b.x,			b.y,			hw, hh), self.depth + 1)
+		c[2] = Quadtree(Bound(b.x, 			b.y + hh, hw, hh), self.depth + 1)
+		c[3] = Quadtree(Bound(b.x + hw, b.y + hh,	hw, hh), self.depth + 1)
 
 		self.children = c
 		return True
+
+
+
+
+""" Testing """
+test = Quadtree(Bound(0,0,128,256))
+a = []
+
+for i in range(20):
+	a.append(Point(random.randint(0,128), random.randint(0,256)))
+	test.insert(a[i], "test")
+
+print(a)
+print()
+print(test.rangequery(Bound(0,0,64,64)))
+
+
+
+
 
 
 
